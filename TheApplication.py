@@ -39,12 +39,12 @@ else:
 
 layout_intro = [
         [sg.Text(waarschuwing,text_color="red")],    
-        [sg.Text(introtekst,relief=sg.RELIEF_FLAT,font=("Bahnschrift"),tooltip="help I guess")],
-        #[sg.Image(r"C:/Users/slmpp/Documents/Ontwikkeling van een LeanAssesment tool/afbeeldingen/bestlogo.png")],
+        [sg.Text(introtekst,font=("Bahnschrift"))],
+        [sg.Image(r"Augmented Reality Lean application/Images/Han_logo.png",pad=((150,0),0))],
         [sg.Button('Next page',font=("Bahnschrift"),key="-Next1-",pad=((300,0), (30,0)))]
         ]
 
-window_intro = sg.Window("Introduction",layout_intro,size=(750,500))
+window_intro = sg.Window("Introduction",layout_intro,size=(750,600))
 
 #Loop en Window 1
 while True:
@@ -384,8 +384,6 @@ def functionRoadmap(stapjes,rm_window):
     rm_window.Maximize()
     graph = rm_window['graph'] 
 
-    print(graph_x+100)
-
     y_raster = 20
     vorige_raster = 0
     begin = 0
@@ -470,7 +468,7 @@ def functionRoadmap(stapjes,rm_window):
                 if einde_y > heigth:
                     einde_y = heigth
                 myScreenshot = ImageGrab.grab(bbox=(0,50,width,einde_y))
-                file_path = filedialog.asksaveasfilename(filetypes=[('.png','.jpeg')],defaultextension='.png')
+                file_path = filedialog.asksaveasfilename(filetypes=[('.png','.jpeg','.pdf')],defaultextension='.png')
                 myScreenshot.save(file_path)
                 #sg.ChangeLookAndFeel('DarkTeal6')
                 confirm_layout = [[sg.Text("The roadmap has been saved as image on\n" + file_path + "!",font=("Bahnschrift"))]]
