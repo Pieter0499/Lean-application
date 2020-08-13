@@ -5,17 +5,24 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import ImageGrab
 
-
+#Maakt alles scherp, automatisch naar 1080p gezet? (negeren scaling?)
+windll.shcore.SetProcessDpiAwareness(1)
 #aan de hand van width en height ratio berekenen
 ## mogelijk ook achter komen hoe Python kan weten wat de display scale is? Zodat ie, als niet 100%, een waarschuwing kan geven?
 user32 = windll.user32
 heigth = user32.GetSystemMetrics(1)
 width = user32.GetSystemMetrics(0)
 
-print(width)
-
 ratio = 0.8*(heigth/1080)
-letter = round(10*ratio)
+letter = round(8*ratio)
+
+#Mooie/leuke waardes: 'Reddit','SandyBeach'
+#sg.ListOfLookAndFeelValues()
+sg.ListOfLookAndFeelValues()
+
+sg.ChangeLookAndFeel('DarkTeal6')
+
+
 #Window 0: Intro
 introtekst = "Hello user! This application will guide you to a roadmap that will help\n\
 make a plan to make the assembly Augmented Reality-ready. This application\n\
@@ -32,12 +39,12 @@ else:
 
 layout_intro = [
         [sg.Text(waarschuwing,text_color="red")],    
-        [sg.Text(introtekst)],
+        [sg.Text(introtekst,relief=sg.RELIEF_FLAT,font=("Bahnschrift"),tooltip="help I guess")],
         #[sg.Image(r"C:/Users/slmpp/Documents/Ontwikkeling van een LeanAssesment tool/afbeeldingen/bestlogo.png")],
-        [sg.Button('Next page',key="-Next1-",pad=((200,0), (30,0)))]
+        [sg.Button('Next page',font=("Bahnschrift"),key="-Next1-",pad=((300,0), (30,0)))]
         ]
 
-window_intro = sg.Window("Introduction",layout_intro,size=(500,500))
+window_intro = sg.Window("Introduction",layout_intro,size=(750,500))
 
 #Loop en Window 1
 while True:
@@ -45,96 +52,21 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     if event == "-Next1-":
-        layout_2 = [
-            [sg.Text('1.1. In the first questionnaire, some general information is asked\n\regarding the company. The questions can be skipped.')],
-            [sg.Text('Country of operation:')],[sg.Input(size=(20,0))],
-            [sg.Text('Customer base (Local, EU, International):')],[sg.Input(size=(20,0))],
-            [sg.Text('Number of employees:')],[sg.Input(size=(20,0))],
-            [sg.Text('Share of employees being operators (parts pickers, \nassemblers, machinery operators):')],[sg.Input(size=(20,0))],
-            [sg.Text('Rough estimate of annual turnover:')],[sg.Input(size=(20,0))],
-            [sg.Text('Share of product costs that assembly represents:')],[sg.Input(size=(20,0))],
-            [sg.Text('What type of products are being produced?:')],[sg.Input(size=(20,0))],
-            [sg.Text('Position(s) of the responent(s):')],[sg.Input(size=(20,0))],
-            [sg.Button('Next page',key='-Next2-',pad=((200,0),(50,0)))]
+        layout_5 = [
+            [sg.Text('2.1. The following questionnaires are regarding the assembly.\nThey help to see which\nsteps have to be\ntaken to make the assembly Augmented Reality-ready.',font=("Bahnschrift"))],
+            [sg.Text('What is your current position in the market?',font=("Bahnschrift"))],[sg.Input(size=(20,0))],
+            [sg.Text('Are there desires from management to evolve the position?',font=("Bahnschrift"))],[sg.Input(size=(20,0))],
+            [sg.Text('What are the goals of your strategy over the next 5 years?',font=("Bahnschrift"))],[sg.Multiline(autoscroll=True)],
+            [sg.Text('How is your current strategy going to change?',font=("Bahnschrift"))],[sg.Multiline(autoscroll=True)],            
+            [sg.Text('What role has assembly in this strategy?',font=("Bahnschrift"))],[sg.Multiline(autoscroll=True)],            
+            [sg.Text('In this strategy, what performances need to be improved\nin assembly? (Quality, lead-time, costs, safety, adaptability,…)',font=("Bahnschrift"))],[sg.Multiline(autoscroll=True)],
+            [sg.Text('Have you identified the assembly activities and\ntheir respective complexities to overcome in order to achieve\nthe needed perfromances improvements?',font=("Bahnschrift")),sg.Button("?",key='-Info-')],[sg.Combo(['Yes','No'],font=("Bahnschrift"),key='-Assembly-',default_value='Yes',readonly=True,size=(10,0))],
+            [sg.Button('Next page',key='-Next5-',pad=((200,0),0),font=("Bahnschrift"))]
             ]
-        window_1 = sg.Window("1.1. General information",layout_2,size=(500,600),resizable=True)
+        window_4 = sg.Window('2.1. Assembly information',layout_5,size=(700,1000),resizable=True)
         break
 window_intro.close()
 
-#Loop en Window 2
-while True:
-    event, values = window_1.read()
-    if event == sg.WIN_CLOSED:
-        break
-    if event == '-Next2-':
-        layout_3 = [
-            [sg.Text('1.2. Now, some questions regarding knowledge and capabilites\n\about Industry 4.0 are asked. These can also be skipped.'),sg.Button('?',key='-Info-')],
-            [sg.Text('Is management aware of the potential performance\nbenefits that Industry 4.0 technologies offer?:')],[sg.Input(size=(20,0))],
-            [sg.Text('Is management considering implementation of Industry 4.0\ntechnologies and concepts in their business?')],[sg.Input(size=(20,0))],
-            [sg.Text('Has the company conducted experiments to study the\nusability of AR in its assembly context?')],[sg.Input(size=(20,0))],
-            [sg.Text('If yes, what were the outcomes of the experiment?')],[sg.Multiline(autoscroll=True)],
-            [sg.Text('If no, has the company experimented with other enhancing\ncognitive aid technologies?')],[sg.Multiline(autoscroll=True)],
-            [sg.Button('Next page',key='-Next3-')]
-            ]    
-        window_2 = sg.Window("1.2. Industry 4.0 knowledge",layout_3,size=(500,500))
-        break
-window_1.close()
-
-#loop en Window 3
-while True:
-    event, values = window_2.read()
-    if event == sg.WIN_CLOSED:
-        break
-    if event == '-Info-':
-        layout_info = [
-            [sg.Text("Industry 4.0 is the term used to describe the new industrial revolution\n\
-                currently taking place in manufacturing. This concept aims at making use\n\
-                of new technologies (Internet of Things, Cloud Computing, Big Data and Analytics,\n\
-                Simulation, Augmented Reality, Additive Manufacturing, Collaborative Robots)\n\
-                to integrate, digitalize and automate every part of a company. By harvesting\n\
-                performance data from the company's various assessts and further analyze them,\n\
-                it is possible to create 'virtual twin factory' from which can be simulated a widerange\n\
-                of scenarios. This in turn provides the company with a self-optimization capabilities,\n\
-                making it's operations able to automatically adapt. Industry 4.0 also has a human-centric\n\
-                approach which aim at augmenting and integrating the employees with the technologies\n\
-                surrounding them. The outcomes of going towards Industry 4.0 are increased adaptability,\n\
-                increased flexibility of production (batch size, variants management) and efficiency.")]
-            ]
-        window_info = sg.Window("Info",layout_info,grab_anywhere=True)
-        event, values = window_info.read()
-        window_info.close()
-    if event == '-Next3-':
-        layout_4 = [
-            [sg.Text("1.3. The last introduction questionnaire will be about the Company's\nexperience with Lean. Again, they may be skipped."),sg.Button('?',key='-Info1-')],
-            [sg.Text('Has there been information sharing throughout the company to increase\nawareness on the benefits of Lean practices?')],[sg.Input(size=(20,0))],
-            [sg.Text('Which Lean practices have already or are being implemented in the company?')],[sg.Multiline(autoscroll=True)],
-            [sg.Text('Has the company and its employees adopted a continuous improvement\nmindset aimed at constantly improving efficiency, costs and quality?')],[sg.Input(size=(20,0))],
-            [sg.Text('Are the performances after implementation satisfactory for management?')],[sg.Input(size=(20,0))],
-            [sg.Button('Next page',key='-Next4-')]]
-        window_3 = sg.Window("1.3. Lean knowledge",layout_4,size=(500,500))
-        break   
-window_2.close()
-
-#loop en Window 4
-while True:
-    event, values = window_3.read()
-    if event == sg.WIN_CLOSED:
-        break
-    if event == '-Next4-':
-        layout_5 = [
-            [sg.Text('2.1. The following questionnaires are regarding the assembly.\nThey help to see which\nsteps have to be\ntaken to make the assembly Augmented Reality-ready.')],
-            [sg.Text('What is your current position in the market?')],[sg.Input(size=(20,0))],
-            [sg.Text('Are there desires from management to evolve the position?')],[sg.Input(size=(20,0))],
-            [sg.Text('What are the goals of your strategy over the next 5 years?')],[sg.Multiline(autoscroll=True)],
-            [sg.Text('How is your current strategy going to change?')],[sg.Multiline(autoscroll=True)],            
-            [sg.Text('What role has assembly in this strategy?')],[sg.Multiline(autoscroll=True)],            
-            [sg.Text('In this strategy, what performances need to be improved\nin assembly? (Quality, lead-time, costs, safety, adaptability,…)')],[sg.Multiline(autoscroll=True)],
-            [sg.Text('Have you identified the assembly activities and\ntheir respective complexities to overcome in order to achieve\nthe needed perfromances improvements?'),sg.Button("?",key='-Info-')],[sg.Combo(['Yes','No'],key='-Assembly-',default_value='Yes',readonly=True,size=(10,0))],
-            [sg.Button('Next page',key='-Next5-',pad=((200,0),0))]
-            ]
-        window_4 = sg.Window('2.1. Assembly information',layout_5,size=(500,700),resizable=True)
-        break
-window_3.close()
 
 #loop en Window 5
 while True:
@@ -154,19 +86,19 @@ while True:
     if event == '-Next5-':
         if values['-Assembly-'] == 'Yes':
             layout_6 = [
-                [sg.Text('As you have answered yes, some additional questions are presented:')],
-                [sg.Text("Are there activities which complexities would be overcome by\ndisplaying through AR real-time instructions?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this."),sg.Button('Why AR?',key='1')],[sg.Button('Answer questionnaire',key='guidance')],
-                [sg.Text('\nIs performance lacking because training is required often\nand is time demanding?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.'),sg.Button('Why AR?',key='2')],[sg.Button('Answer questionnaire',key='training')],
-                [sg.Text('\nIs performance lacking in part fetching due to the variety of\nparts and components to be gathered in various locations?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.'),sg.Button('Why AR?',key='3')],[sg.Button('Answer questionnaire',key='partspicking')]
+                [sg.Text('As you have answered yes, some additional questions are presented:',font=("Bahnschrift"))],
+                [sg.Text("Are there activities which complexities would be overcome by\ndisplaying through AR real-time instructions?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.",font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='1')],[sg.Button('Answer questionnaire',font=("Bahnschrift"),key='guidance')],
+                [sg.Text('\nIs performance lacking because training is required often\nand is time demanding?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.',font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='2')],[sg.Button('Answer questionnaire',font=("Bahnschrift"),key='training')],
+                [sg.Text('\nIs performance lacking in part fetching due to the variety of\nparts and components to be gathered in various locations?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.',font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='3')],[sg.Button('Answer questionnaire',font=("Bahnschrift"),key='partspicking')]
                 ]
         if values['-Assembly-'] == 'No':
             layout_6 = [
-                [sg.Text('As you have answered no, the following questions will\nhelp identify Augmented Reality opportunities')],
-                [sg.Text('Are there activities which mean of improvement would\nbe a real-time display of information (instructions, drawings)?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.'),sg.Button('Why AR?',key='4')],[sg.Button('Answer questionnaire')],
-                [sg.Text('Is the experience of operators impacting their\nperformances when assembling a new product variant?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.'),sg.Button('Why AR?',key='5')],[sg.Button('Answer questionnaire')],
-                [sg.Text('Part of the assembly time is dependant on the\nfetching of parts to the assembly stations?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.'),sg.Button('Why AR?',key='6')],[sg.Button('Answer questionnaire')]
+                [sg.Text('As you have answered no, the following questions will\nhelp identify Augmented Reality opportunities',font=("Bahnschrift"))],
+                [sg.Text('Are there activities which mean of improvement would\nbe a real-time display of information (instructions, drawings)?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.',font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='4')],[sg.Button('Answer questionnaire',font=("Bahnschrift"))],
+                [sg.Text('Is the experience of operators impacting their\nperformances when assembling a new product variant?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.',font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='5')],[sg.Button('Answer questionnaire',font=("Bahnschrift"))],
+                [sg.Text('Part of the assembly time is dependant on the\nfetching of parts to the assembly stations?\n\nIf so, click on the button below to answer\nthe questionnaire regarding this.',font=("Bahnschrift")),sg.Button('Why AR?',font=("Bahnschrift"),key='6')],[sg.Button('Answer questionnaire',font=("Bahnschrift"))]
                 ]        
-        window_5 = sg.Window('2.2. Assembly questionnaire',layout_6,size=(500,500))
+        window_5 = sg.Window('2.2. Assembly questionnaire',layout_6,size=(750,750))
         break
 window_4.close()
 
@@ -181,84 +113,87 @@ ARhelp = {'1':"What Augmented Reality can do to help:\n\nAsssembly AR real-time 
 
 #voor questionnaires
 questionnaire = {
-'guidance':[[sg.Button('Hide'),sg.Button('See/Update roadmap',pad=((300,0),0),key='-Guidance-')],[sg.Text("This questionnaire will seek what Lean/Industry 4.0\ncapabilities are missing or not regarding AR real-time assembly instructions guidance.\n\nAnswer the questions related to Lean capabilities:")],[sg.Column([
-    [sg.Text("Assembly processing sequence is optimized to attain\nmaximum flow and throughput time:")],[sg.Radio('Yes', "RADIO1",key='4 1'),sg.Radio('No', "RADIO1",default=True)],
-    [sg.Text("Operators are inclined to follow the instruction sequence:")],[sg.Radio('Yes', "RADIO2",key='4 2'),sg.Radio('No', "RADIO2", default=True)],
-    [sg.Text("Instructions, assembly aids and training are formalized:")],[sg.Radio('Yes', "RADIO3",key='3 1'),sg.Radio('No', "RADIO3", default=True)],
-    [sg.Text("Company ensures operators have ergonomic work conditions:")],[sg.Radio('Yes', "RADIO4",key='1 1'),sg.Radio('No', "RADIO4", default=True)],
-    [sg.Text("Employees are trained for safe operations:")],[sg.Radio('Yes', "RADIO5",key='1 2'),sg.Radio('No', "RADIO5", default=True)],
-    [sg.Text("5S principles are applied and respected on the assembly\nlocation (Sort, Set in order, Shine, Standardize, Sustain):")],[sg.Radio('Yes', "RADIO6",key='1 3'),sg.Radio('No', "RADIO6", default=True)],
-    [sg.Text("Production management and Team leaders are involved\nin the planning and sequencing of assembly:")],[sg.Radio('Yes', "RADIO7",key='1 4'),sg.Radio('No', "RADIO7", default=True)],
-    [sg.Text("Assembly processes are standardized throughout the\nvariants of products:")],[sg.Radio('Yes', "RADIO8",key='2 1'),sg.Radio('No', "RADIO8", default=True)],
-    [sg.Text("Management involves and consults all stakeholders\nwhen implementing changes in operations:")],[sg.Radio('Yes', "RADIO9",key='0 1'),sg.Radio('No', "RADIO9", default=True)],
-    [sg.Text("Management makes efforts to convince employees to welcome change:")],[sg.Radio('Yes', "RADIO10",key='0 2'),sg.Radio('No', "RADIO10", default=True)]
-        ],scrollable=True,vertical_scroll_only=True,size=(500,200))],
-    [sg.Text("Answer the questions related to Industry 4.0 capabilities:")],[sg.Column([
-    [sg.Text("An ERP system has been implemented for for ressources\nand orders management:")],[sg.Radio('Yes', "RADIO11",key='5 1'),sg.Radio('No', "RADIO11", default=True)],
-    [sg.Text("Scheduling of assembly activities through the ERP system:")],[sg.Radio('Yes', "RADIO12",key='5 2'),sg.Radio('No', "RADIO12", default=True)],
-    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:")],[sg.Radio('Yes', "RADIO13",key='5 3'),sg.Radio('No', "RADIO13", default=True)],
-    [sg.Text("Assembly instructions are digitalized (not only\ntexts but also drawings):")],[sg.Radio('Yes', "RADIO14",key='7 1'),sg.Radio('No', "RADIO14", default=True)],
-    [sg.Text("Development of new products is done using a CAD software:")],[sg.Radio('Yes', "RADIO15",key='7 2'),sg.Radio('No', "RADIO15", default=True)],
-    [sg.Text("For parts coming from suppliers, are you also supplied\nwith drawings of said parts:")],[sg.Radio('Yes', "RADIO16",key='6 1'),sg.Radio('No', "RADIO16", default=True)],
-    [sg.Text("Parts and components drawings are stored in a PDM/PLM\nsystem:")],[sg.Radio('Yes', "RADIO17",key='6 2'),sg.Radio('No', "RADIO17", default=True)],
-    [sg.Text("PDM and PLM data are integrated to the ERP software:")],[sg.Radio('Yes', "RADIO18",key='8 1'),sg.Radio('No', "RADIO18", default=True)],
-    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:")],[sg.Radio('Yes', "RADIO19",key='8 2'),sg.Radio('No', "RADIO19", default=True)],
-    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:")],[sg.Radio('Yes', "RADIO20",key='9 1'),sg.Radio('No', "RADIO20", default=True)],
-    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:")],[sg.Radio('Yes', "RADIO21",key='9 2'),sg.Radio('No', "RADIO21", default=True)],
-    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:")],[sg.Radio('Yes', "RADIO22",key='10 1'),sg.Radio('No', "RADIO22", default=True)],
-    ],scrollable=True,vertical_scroll_only=True,size=(500,250))]
+'guidance':[[sg.Button('Hide',font=("Bahnschrift")),sg.Button('See/Update roadmap',font=("Bahnschrift"),pad=((550,0),0),key='-Guidance-'),sg.Button("Quit program",font=("Bahnschrift"),pad=((500,0),0),key="quit")],[sg.Text("This questionnaire will seek what Lean/Industry 4.0 capabilities are\nmissing or not regarding AR real-time assembly instructions guidance.",font=("Bahnschrift",20))],
+    [sg.Text("\nAnswer the questions related to Lean capabilities:",font=("Bahnschrift")),sg.Text("\nAnswer the questions related to Industry 4.0 capabilities:",pad=((275,0),0),font=("Bahnschrift"))],[sg.Column([
+    [sg.Text("Assembly processing sequence is optimized to attain\nmaximum flow and throughput time:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO1",key='4 1',font=("Bahnschrift")),sg.Radio('No', "RADIO1",default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators are inclined to follow the instruction sequence:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO2",key='4 2',font=("Bahnschrift")),sg.Radio('No', "RADIO2", default=True,font=("Bahnschrift"))],
+    [sg.Text("Instructions, assembly aids and training are formalized:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO3",key='3 1',font=("Bahnschrift")),sg.Radio('No', "RADIO3", default=True,font=("Bahnschrift"))],
+    [sg.Text("Company ensures operators have ergonomic work conditions:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO4",key='1 1',font=("Bahnschrift")),sg.Radio('No', "RADIO4", default=True,font=("Bahnschrift"))],
+    [sg.Text("Employees are trained for safe operations:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO5",key='1 2',font=("Bahnschrift")),sg.Radio('No', "RADIO5", default=True,font=("Bahnschrift"))],
+    [sg.Text("5S principles are applied and respected on the assembly\nlocation (Sort, Set in order, Shine, Standardize, Sustain):",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO6",key='1 3',font=("Bahnschrift")),sg.Radio('No', "RADIO6", default=True,font=("Bahnschrift"))],
+    [sg.Text("Production management and Team leaders are involved\nin the planning and sequencing of assembly:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO7",key='1 4',font=("Bahnschrift")),sg.Radio('No', "RADIO7", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly processes are standardized throughout the\nvariants of products:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO8",key='2 1',font=("Bahnschrift")),sg.Radio('No', "RADIO8", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management involves and consults all stakeholders\nwhen implementing changes in operations:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO9",key='0 1',font=("Bahnschrift")),sg.Radio('No', "RADIO9", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management makes efforts to convince employees to welcome change:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO10",key='0 2',font=("Bahnschrift")),sg.Radio('No', "RADIO10", default=True,font=("Bahnschrift"))]
+        ],scrollable=True,vertical_scroll_only=True,size=(700,500)),
+    sg.Column([
+    [sg.Text("An ERP system has been implemented for for resources\nand orders management:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO11",key='5 1',font=("Bahnschrift")),sg.Radio('No', "RADIO11", default=True,font=("Bahnschrift"))],
+    [sg.Text("Scheduling of assembly activities through the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO12",key='5 2',font=("Bahnschrift")),sg.Radio('No', "RADIO12", default=True,font=("Bahnschrift"))],
+    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO13",key='5 3',font=("Bahnschrift")),sg.Radio('No', "RADIO13", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly instructions are digitalized (not only\ntexts but also drawings):",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO14",key='7 1',font=("Bahnschrift")),sg.Radio('No', "RADIO14", default=True,font=("Bahnschrift"))],
+    [sg.Text("Development of new products is done using a CAD software:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO15",key='7 2',font=("Bahnschrift")),sg.Radio('No', "RADIO15", default=True,font=("Bahnschrift"))],
+    [sg.Text("For parts coming from suppliers, are you also supplied\nwith drawings of said parts:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO16",key='6 1',font=("Bahnschrift")),sg.Radio('No', "RADIO16", default=True,font=("Bahnschrift"))],
+    [sg.Text("Parts and components drawings are stored in a PDM/PLM\nsystem:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO17",key='6 2',font=("Bahnschrift")),sg.Radio('No', "RADIO17", default=True,font=("Bahnschrift"))],
+    [sg.Text("PDM and PLM data are integrated to the ERP software:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO18",key='8 1',font=("Bahnschrift")),sg.Radio('No', "RADIO18", default=True,font=("Bahnschrift"))],
+    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO19",key='8 2',font=("Bahnschrift")),sg.Radio('No', "RADIO19", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO20",key='9 1',font=("Bahnschrift")),sg.Radio('No', "RADIO20", default=True,font=("Bahnschrift"))],
+    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO21",key='9 2',font=("Bahnschrift")),sg.Radio('No', "RADIO21", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO22",key='10 1',font=("Bahnschrift")),sg.Radio('No', "RADIO22", default=True,font=("Bahnschrift"))],
+    ],scrollable=True,vertical_scroll_only=True,size=(700,500))]
     ],
-'training':[[sg.Button('Hide'),sg.Button('See/Update roadmap',pad=((300,0),0),key='-Training-')],[sg.Text("This questionnaire will seek what Lean/Industry 4.0\ncapabilities are missing or not regarding\nAR for operators training.\n\nAnswer the questions related to Lean capabilities:")],[sg.Column([
-    [sg.Text("Assembly processing sequence is optimized  to attain\nmaximum flow and throughput time:")],[sg.Radio('Yes', "RADIO23",key='4 1'),sg.Radio('No', "RADIO23", default=True)],
-    [sg.Text("Operators are inclined to follow the instruction sequence:")],[sg.Radio('Yes', "RADIO24",key='4 2'),sg.Radio('No', "RADIO24", default=True)],
-    [sg.Text("Instructions, assembly aids and training are formalized:")],[sg.Radio('Yes', "RADIO25",key='3 1'),sg.Radio('No', "RADIO25", default=True)],
-    [sg.Text("Company ensures operators have ergonomic work conditions:")],[sg.Radio('Yes', "RADIO26",key='1 1'),sg.Radio('No', "RADIO26", default=True)],
-    [sg.Text("Employees are trained for safe operations:")],[sg.Radio('Yes', "RADIO27",key='1 2'),sg.Radio('No', "RADIO27", default=True)],
-    [sg.Text("5S principles are applied and respected on the assembly\nlocation (Sort, Set in order, Shine, Standardize, Sustain):")],[sg.Radio('Yes', "RADIO28",key='1 3'),sg.Radio('No', "RADIO28", default=True)],
-    [sg.Text("Production  management and Team leaders are involved in\nthe planing and sequencing of assembly:")],[sg.Radio('Yes', "RADIO29",key='1 4'),sg.Radio('No', "RADIO29", default=True)],
-    [sg.Text("Assembly processes are standardized throughout the variants\nof products:")],[sg.Radio('Yes', "RADIO30",key='2 1'),sg.Radio('No', "RADIO30", default=True)],
-    [sg.Text("Management involves and consults all stakeholders when\nimplementing changes in operations:")],[sg.Radio('Yes', "RADIO31",key='0 1'),sg.Radio('No', "RADIO31", default=True)],
-    [sg.Text("Management makes efforts to convince employees to welcome change:")],[sg.Radio('Yes', "RADIO32",key='0 2'),sg.Radio('No', "RADIO32", default=True)]]
-    ,scrollable=True,vertical_scroll_only=True,size=(500,200))],
-    [sg.Text("Answer the questions related to Industry 4.0 capabilities:")],[sg.Column([
-    [sg.Text("An ERP system has been implemented for for ressources\nand orders management:")],[sg.Radio('Yes', "RADIO33",key='5 1'),sg.Radio('No', "RADIO33", default=True)],
-    [sg.Text("Scheduling of assembly activities through the ERP system:")],[sg.Radio('Yes', "RADIO34",key='5 2'),sg.Radio('No', "RADIO34", default=True)],
-    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:")],[sg.Radio('Yes', "RADIO35",key='5 3'),sg.Radio('No', "RADIO35", default=True)],
-    [sg.Text("Assembly instructions are digitalized (not only texts\nbut also drawings):")],[sg.Radio('Yes', "RADIO36",key='7 1'),sg.Radio('No', "RADIO36", default=True)],
-    [sg.Text("Development of new products is done using a CAD software:")],[sg.Radio('Yes', "RADIO37",key='7 2'),sg.Radio('No', "RADIO37", default=True)],
-    [sg.Text("For parts coming from suppliers, are you also supplied with drawings of said parts:")],[sg.Radio('Yes', "RADIO38",key='6 1'),sg.Radio('No', "RADIO38", default=True)],
-    [sg.Text("Parts and components drawings are stored in a PDM/PLM system:")],[sg.Radio('Yes', "RADIO39",key='6 2'),sg.Radio('No', "RADIO39", default=True)],
-    [sg.Text("PDM and PLM data are integrated to the ERP software:")],[sg.Radio('Yes', "RADIO40",key='8 1'),sg.Radio('No', "RADIO40", default=True)],
-    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:")],[sg.Radio('Yes', "RADIO41",key='8 2'),sg.Radio('No', "RADIO41", default=True)],
-    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:")],[sg.Radio('Yes', "RADIO42",key='9 1'),sg.Radio('No', "RADIO42", default=True)],
-    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:")],[sg.Radio('Yes', "RADIO43",key='9 2'),sg.Radio('No', "RADIO43", default=True)],
-    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:")],[sg.Radio('Yes', "RADIO44",key='10 1'),sg.Radio('No', "RADIO44", default=True)]
-    ],scrollable=True,vertical_scroll_only=True,size=(500,250))]
+'training':[[sg.Button('Hide',font=("Bahnschrift")),sg.Button('See/Update roadmap',font=("Bahnschrift"),pad=((550,0),0),key='-Training-'),sg.Button("Quit program",font=("Bahnschrift"),pad=((500,0),0),key="quit")],[sg.Text("This questionnaire will seek what Lean/Industry 4.0 capabilities are\nmissing or not regarding AR for operators training.",font=("Bahnschrift",20))],
+    [sg.Text("\nAnswer the questions related to Lean capabilities:",font=("Bahnschrift")),sg.Text("\nAnswer the questions related to Industry 4.0 capabilities:",pad=((275,0),0),font=("Bahnschrift"))],[sg.Column([
+    [sg.Text("Assembly processing sequence is optimized  to attain\nmaximum flow and throughput time:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO23",key='4 1',font=("Bahnschrift")),sg.Radio('No', "RADIO23", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators are inclined to follow the instruction sequence:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO24",key='4 2',font=("Bahnschrift")),sg.Radio('No', "RADIO24", default=True,font=("Bahnschrift"))],
+    [sg.Text("Instructions, assembly aids and training are formalized:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO25",key='3 1',font=("Bahnschrift")),sg.Radio('No', "RADIO25", default=True,font=("Bahnschrift"))],
+    [sg.Text("Company ensures operators have ergonomic work conditions:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO26",key='1 1',font=("Bahnschrift")),sg.Radio('No', "RADIO26", default=True,font=("Bahnschrift"))],
+    [sg.Text("Employees are trained for safe operations:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO27",key='1 2',font=("Bahnschrift")),sg.Radio('No', "RADIO27", default=True,font=("Bahnschrift"))],
+    [sg.Text("5S principles are applied and respected on the assembly\nlocation (Sort, Set in order, Shine, Standardize, Sustain):",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO28",key='1 3',font=("Bahnschrift")),sg.Radio('No', "RADIO28", default=True,font=("Bahnschrift"))],
+    [sg.Text("Production  management and Team leaders are involved in\nthe planing and sequencing of assembly:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO29",key='1 4',font=("Bahnschrift")),sg.Radio('No', "RADIO29", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly processes are standardized throughout the variants\nof products:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO30",key='2 1',font=("Bahnschrift")),sg.Radio('No', "RADIO30", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management involves and consults all stakeholders when\nimplementing changes in operations:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO31",key='0 1',font=("Bahnschrift")),sg.Radio('No', "RADIO31", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management makes efforts to convince employees to welcome change:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO32",key='0 2',font=("Bahnschrift")),sg.Radio('No', "RADIO32", default=True,font=("Bahnschrift"))]]
+    ,scrollable=True,vertical_scroll_only=True,size=(700,500)),
+    sg.Column([
+    [sg.Text("An ERP system has been implemented for for ressources\nand orders management:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO33",key='5 1',font=("Bahnschrift")),sg.Radio('No', "RADIO33", default=True,font=("Bahnschrift"))],
+    [sg.Text("Scheduling of assembly activities through the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO34",key='5 2',font=("Bahnschrift")),sg.Radio('No', "RADIO34", default=True,font=("Bahnschrift"))],
+    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO35",key='5 3',font=("Bahnschrift")),sg.Radio('No', "RADIO35", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly instructions are digitalized (not only texts\nbut also drawings):",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO36",key='7 1',font=("Bahnschrift")),sg.Radio('No', "RADIO36", default=True,font=("Bahnschrift"))],
+    [sg.Text("Development of new products is done using a CAD software:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO37",key='7 2',font=("Bahnschrift")),sg.Radio('No', "RADIO37", default=True,font=("Bahnschrift"))],
+    [sg.Text("For parts coming from suppliers, are you also supplied with drawings of said parts:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO38",key='6 1',font=("Bahnschrift")),sg.Radio('No', "RADIO38", default=True,font=("Bahnschrift"))],
+    [sg.Text("Parts and components drawings are stored in a PDM/PLM system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO39",key='6 2',font=("Bahnschrift")),sg.Radio('No', "RADIO39", default=True,font=("Bahnschrift"))],
+    [sg.Text("PDM and PLM data are integrated to the ERP software:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO40",key='8 1',font=("Bahnschrift")),sg.Radio('No', "RADIO40", default=True,font=("Bahnschrift"))],
+    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO41",key='8 2',font=("Bahnschrift")),sg.Radio('No', "RADIO41", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO42",key='9 1',font=("Bahnschrift")),sg.Radio('No', "RADIO42", default=True,font=("Bahnschrift"))],
+    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO43",key='9 2',font=("Bahnschrift")),sg.Radio('No', "RADIO43", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO44",key='10 1',font=("Bahnschrift")),sg.Radio('No', "RADIO44", default=True,font=("Bahnschrift"))]
+    ],scrollable=True,vertical_scroll_only=True,size=(700,500))]
     ],
-'partspicking':[[sg.Button('Hide'),sg.Button('See/Update roadmap',pad=((300,0),0),key='-Partspicking-')],[sg.Text("This questionnaire will seek what Lean/Industry 4.0\ncapabilities are missing or not regarding\nAR for parts picking.\n\nAnswer the questions related to Lean capabilities:")],[sg.Column([
-    [sg.Text("Assembly processing sequence is optimized  to attain\nmaximum flow and throughput time:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Operators are inclined to follow the instruction sequence:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Instructions, assembly aids and training are formalized:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Company ensures operators have ergonomic work conditions:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Employees are trained for safe operations:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("5S principles are applied and respected on the assembly\nlocation and in the parts storage location. (Sort,\nSet in order, Shine, Standardize, Sustain):")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Production  management and Team leaders are involved in\nthe planing and sequencing of assembly:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Management involves and consults all stakeholders when\nimplementing change:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Management makes efforts to convince employees to welcome change:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))]
-    ],scrollable=True,vertical_scroll_only=True,size=(500,200))],
-    [sg.Text("Answer the questions related to Industry 4.0 capabilities:")],[sg.Column([
-    [sg.Text("An ERP system has been implemented for for ressources\nand orders management:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Scheduling of assembly activities through the ERP system:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Inventory of parts is digitalized, including location\nand quantities of stored parts and components:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("WMS and/or MES is integrated to the ERP system:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Operations departments have access to real time\nperformance data from assembly:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Terminals to follow flow of parts and components\nare available in the warehouse:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))],
-    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:")],[sg.Combo(['Yes','n/a','No'],default_value='Yes',readonly=True,size=(10,0))]
-    ],scrollable=True,vertical_scroll_only=True,size=(500,250))]
+'partspicking':[[sg.Button('Hide',font=("Bahnschrift")),sg.Button('See/Update roadmap',font=("Bahnschrift"),pad=((550,0),0),key='-Partspicking-'),sg.Button("Quit program",font=("Bahnschrift"),pad=((500,0),0),key="quit")],[sg.Text("This questionnaire will seek what Lean/Industry 4.0 capabilities are\nmissing or not regarding AR parts picking.",font=("Bahnschrift",20))],
+    [sg.Text("\nAnswer the questions related to Lean capabilities:",font=("Bahnschrift")),sg.Text("\nAnswer the questions related to Industry 4.0 capabilities:",pad=((275,0),0),font=("Bahnschrift"))],[sg.Column([
+    [sg.Text("Assembly processing sequence is optimized  to attain\nmaximum flow and throughput time:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO45",key='3 1',font=("Bahnschrift")),sg.Radio('No', "RADIO45", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators are inclined to follow the instruction sequence:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO46",key='3 2',font=("Bahnschrift")),sg.Radio('No', "RADIO46", default=True,font=("Bahnschrift"))],
+    [sg.Text("Instructions, assembly aids and training are formalized:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO47",key='2 1',font=("Bahnschrift")),sg.Radio('No', "RADIO47", default=True,font=("Bahnschrift"))],
+    [sg.Text("Company ensures operators have ergonomic work conditions:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO48",key='1 1',font=("Bahnschrift")),sg.Radio('No', "RADIO48", default=True,font=("Bahnschrift"))],
+    [sg.Text("Employees are trained for safe operations:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO49",key='1 2',font=("Bahnschrift")),sg.Radio('No', "RADIO49", default=True,font=("Bahnschrift"))],
+    [sg.Text("5S principles are applied and respected on the assembly\nlocation and in the parts storage location. (Sort,\nSet in order, Shine, Standardize, Sustain):",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO50",key='1 3',font=("Bahnschrift")),sg.Radio('No', "RADIO50", default=True,font=("Bahnschrift"))],
+    [sg.Text("Production  management and Team leaders are involved in\nthe planing and sequencing of assembly:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO51",key='1 4',font=("Bahnschrift")),sg.Radio('No', "RADIO51", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management involves and consults all stakeholders when\nimplementing change:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO52",key='0 1',font=("Bahnschrift")),sg.Radio('No', "RADIO52", default=True,font=("Bahnschrift"))],
+    [sg.Text("Management makes efforts to convince employees to welcome change:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO53",key='0 2',font=("Bahnschrift")),sg.Radio('No', "RADIO53", default=True,font=("Bahnschrift"))]
+    ],scrollable=True,vertical_scroll_only=True,size=(700,500)),
+    sg.Column([
+    [sg.Text("An ERP system has been implemented for for ressources\nand orders management:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO54",key='4 1',font=("Bahnschrift")),sg.Radio('No', "RADIO54", default=True,font=("Bahnschrift"))],
+    [sg.Text("Scheduling of assembly activities through the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO55",key='4 2',font=("Bahnschrift")),sg.Radio('No', "RADIO55", default=True,font=("Bahnschrift"))],
+    [sg.Text("Inventory of parts is digitalized, including location\nand quantities of stored parts and components:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO56",key='5 1',font=("Bahnschrift")),sg.Radio('No', "RADIO56", default=True,font=("Bahnschrift"))],
+    [sg.Text("All employees input and visualize their performances\nand resources (used and needed) in the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO57",key='4 3',font=("Bahnschrift")),sg.Radio('No', "RADIO57", default=True,font=("Bahnschrift"))],
+    [sg.Text("WMS and/or MES is integrated to the ERP system:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO58",key='6 1',font=("Bahnschrift")),sg.Radio('No', "RADIO58", default=True,font=("Bahnschrift"))],
+    [sg.Text("Information and Data from all information systems are\naccessible throughout the company departments:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO59",key='6 2',font=("Bahnschrift")),sg.Radio('No', "RADIO59", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operations departments have access to real time\nperformance data from assembly:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO60",key='7 1',font=("Bahnschrift")),sg.Radio('No', "RADIO60", default=True,font=("Bahnschrift"))],
+    [sg.Text("Terminals to follow flow of parts and components\nare available in the warehouse:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO61",key='7 2',font=("Bahnschrift")),sg.Radio('No', "RADIO61", default=True,font=("Bahnschrift"))],
+    [sg.Text("Assembly data (completion times, errors, wrong parts,\nquality deffects, etc) is acquired and stored:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO62",key='8 1',font=("Bahnschrift")),sg.Radio('No', "RADIO62", default=True,font=("Bahnschrift"))],
+    [sg.Text("Acquired Data is processed and analyzed to identify\nimprovement areas:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO63",key='8 2',font=("Bahnschrift")),sg.Radio('No', "RADIO63", default=True,font=("Bahnschrift"))],
+    [sg.Text("Operators and other employees are trained to use new,\nmore efficient technologies:",font=("Bahnschrift"))],[sg.Radio('Yes', "RADIO64",key='9 1',font=("Bahnschrift")),sg.Radio('No', "RADIO64", default=True,font=("Bahnschrift"))]
+    ],scrollable=True,vertical_scroll_only=True,size=(700,500))]
     ]
 }
 
@@ -321,8 +256,10 @@ stapjes_g = {"Continous improvement/Company\nand employees attitude\ntowards cha
 "Evaluate new performances\nand Improve":[0,15,'-1'],"Evaluate new assembly\nperformances, continously\nimprove and update":[12,15,'18',"pijl1","pijl4"]
 }
 
+#Training roadmap
 stapjes_t = stapjes_g
 
+#P P roadmap
 stapjes_pp = {"Continous improvement/\nCompany and\nemployees attitude towards change":[0,0,'-1'],
 "Human Resource Management":[0,1,'-1'],"Organization of\nWarehouse and\nassembly stations\nfollowing 5S":[1,1,'1',"stap1","stap2"],
 "Visual management":[0,2,'-1'],"Formalization of\ninstructions and\ntraining.":[2,2,'2',"stap1"],
@@ -352,14 +289,14 @@ def Stap(teken,tekst,px,py,kleur='black'):
     max_y = len(lengte)
     tloc = sg.TEXT_LOCATION_TOP_LEFT
     if px != 0:
-        teken.DrawRectangle(top_left=(px,py+max_y*10*ratio),bottom_right=(px+max_x*7*ratio,py-max_y*10*ratio),fill_color='Orange',line_color='Black',line_width=5*ratio)
+        teken.DrawRectangle(top_left=(px,py+max_y*10*ratio),bottom_right=(px+max_x*8*ratio,py-max_y*10*ratio),fill_color='Orange',line_color='Black',line_width=5*ratio)
         tloc = "center"
         kleur = 'black'
     else:
         max_x = 0
         py = py-max_y*10*ratio
     
-    teken.DrawText(tekst,location=(px+0.5*max_x*7*ratio,py),color=kleur,font=(None,letter),angle=0,text_location=tloc)
+    teken.DrawText(tekst,location=(px+0.5*max_x*8*ratio,py),color=kleur,font=("Bahnschrift",letter),angle=0,text_location=tloc)
 
 def Pijl(teken,x0,x1,y0,y1,kolom_d,rij_d):
     px0 = 0
@@ -402,6 +339,7 @@ def Pijl(teken,x0,x1,y0,y1,kolom_d,rij_d):
 #check hoe "dik" maximaal elke rij is, en hoe "breed" elke kolom is
 
 def functionRoadmap(stapjes,rm_window):
+    global letter
     dik_subsub = []
     rij_dict = {}
     kolom_dict = {}
@@ -441,7 +379,7 @@ def functionRoadmap(stapjes,rm_window):
         graph_y = graph_y + rij_dict[i]*25
 
 #niet draggable window, column weg
-    layout = [[sg.Button("Return to update roadmap",key='-Return-'),sg.Button("Save as image",pad=((500,0),0),key='-Save-')],[sg.Column([[sg.Graph((graph_x+100,graph_y),graph_bottom_left=(-100,graph_y),graph_top_right=(graph_x,0),key='graph')]],scrollable=False,size=(graph_x+50,graph_y))]]
+    layout = [[sg.Button("Return",font=("Bahnschrift"),key='-Return-'),sg.Button("Save as image",font=("Bahnschrift"),pad=((300,0),0),key='-Save-'),sg.Text("Text size too small/large in box? Change it! ",font=("Bahnschrift"),pad=((200,0),0)),sg.Button("-",key="minus"),sg.Text(str(letter),font=("Bahnschrift")),sg.Button("+",key="plus"),sg.Button("Quit program",font=("Bahnschrift"),pad=((300,0),0),key="quit")],[sg.Column([[sg.Graph((graph_x+100,graph_y+20),graph_bottom_left=(-100,graph_y),graph_top_right=(graph_x,-20),key='graph')]],scrollable=False,size=(graph_x+50,graph_y))]]
     rm_window = sg.Window("lol",layout,no_titlebar=True,resizable=True,size=(width,heigth)).Finalize()
     rm_window.Maximize()
     graph = rm_window['graph'] 
@@ -457,31 +395,31 @@ def functionRoadmap(stapjes,rm_window):
     y_oud = 0
     for i in rij_dict:
         if begin == 0:
-            graph.DrawLine(point_from=(0,y_raster-rij_dict[i]*10*ratio-5),point_to=(graph_x*ratio,y_raster-rij_dict[i]*10*ratio-5),color="white",width=0.5)
+            graph.DrawLine(point_from=(0,y_raster-rij_dict[i]*10*ratio-5),point_to=(graph_x*ratio,y_raster-rij_dict[i]*10*ratio-5),color="black",width=0.5)
             vorige_raster = rij_dict[i]
             begin = 1
         else:
             #prev_y = y_raster
             y_raster = y_raster + vorige_raster*10*ratio + (rij_dict[i]-1)*10*ratio + 20
             #graph.DrawRectangle(top_left=(0,prev_y-vorige_raster*10-5),bottom_right=(graph_x,y_raster-rij_dict[i]*10-5),fill_color=kleur2,line_color=kleur2,line_width=5)
-            graph.DrawLine(point_from=(0,y_raster-rij_dict[i]*10*ratio-5),point_to=(graph_x*ratio,y_raster-rij_dict[i]*10*ratio-5),color="white",width=0.5)
+            graph.DrawLine(point_from=(0,y_raster-rij_dict[i]*10*ratio-5),point_to=(graph_x*ratio,y_raster-rij_dict[i]*10*ratio-5),color="black",width=0.5)
             vorige_raster = rij_dict[i]
         
         for k in uitleg_dic:
             if a == 1:
                 graph.DrawRectangle(top_left=(-90,y_oud),bottom_right=(-20,y_raster-rij_dict[i]*10-5),fill_color="grey",line_color="black",line_width=5)
-                graph.DrawText(tekst,location=(-55,(y_oud+(y_raster-rij_dict[i]*10*ratio-5))/2),color='black',font=None,angle=90,text_location="center")
+                graph.DrawText(tekst,location=(-55,(y_oud+(y_raster-rij_dict[i]*10*ratio-5))/2),color='black',font=("Bahnschrift"),angle=90,text_location="center")
                 y_oud = y_raster-rij_dict[i]*10*ratio-5
                 a = 0
             tekst = k
             if i == uitleg_dic[k][-1]:
                 a = 1
                 break
-    graph.DrawRectangle(top_left=(-90,y_oud),bottom_right=(-20,graph_y),fill_color="grey",line_color="black",line_width=5)
-    graph.DrawText(tekst,location=(-55,(y_oud+(y_raster-rij_dict[i]*10*ratio-5))/2),color='black',font=None,angle=90,text_location="center")
+    graph.DrawRectangle(top_left=(-90,y_oud),bottom_right=(-20,graph_y*ratio),fill_color="grey",line_color="black",line_width=5)
+    graph.DrawText(tekst,location=(-55,(y_oud+(y_raster-rij_dict[i]*10*ratio-5))/2),color='black',font=("Bahnschrift"),angle=90,text_location="center")
 
     
-    graph.DrawLine(point_from=(kolom_dict[0]*7*ratio+20,0),point_to=(kolom_dict[0]*7*ratio+20,graph_y),color="white",width=0.5)
+    graph.DrawLine(point_from=(kolom_dict[0]*7*ratio+20,-20),point_to=(kolom_dict[0]*7*ratio+20,graph_y),color="black",width=0.5)
 #y = y + 20 + rij_dict[stapjes[i][1]-1]*10 + (rij_dict[stapjes[i][1]]-1)*10
 
     y = 20
@@ -507,7 +445,7 @@ def functionRoadmap(stapjes,rm_window):
                         Pijl(teken=graph,x0=x0_,x1=x1_,y0=y0_,y1=y1_,kolom_d = kolom_dict,rij_d = rij_dict)
                         break
     graph.DrawRectangle(top_left=(kolom_dict[0]*7*ratio+40,20-rij_dict[0]*7*ratio),bottom_right=(graph_x*ratio,20+rij_dict[0]*7*ratio),fill_color='Orange',line_color='Black',line_width=5*ratio)
-    graph.DrawText("Involvement of stakeholders in discussions, before and during the project to gather opinions, doubts, and ideas. Efforts to convince operators of change necessity.",location=((kolom_dict[0]*7*ratio+40+graph_x*ratio)/2,20),color='black',font=(None,letter),angle=0,text_location="center")
+    graph.DrawText("Involvement of stakeholders in discussions, before and during the project to gather opinions, doubts, and ideas. Efforts to convince operators of change necessity.",location=((kolom_dict[0]*7*ratio+40+graph_x*ratio)/2,20),color='black',font=("Bahnschrift",letter),angle=0,text_location="center")
     
     for i in stapjes:
         x = 0
@@ -528,13 +466,36 @@ def functionRoadmap(stapjes,rm_window):
             break
         if ev == '-Save-':
             try:
-                #myScreenshot = pyautogui.screenshot()
-                myScreenshot = ImageGrab.grab()
-                file_path = filedialog.asksaveasfilename(defaultextension='.png')
+                einde_y = graph_y*ratio+100
+                if einde_y > heigth:
+                    einde_y = heigth
+                myScreenshot = ImageGrab.grab(bbox=(0,50,width,einde_y))
+                file_path = filedialog.asksaveasfilename(filetypes=[('.png','.jpeg')],defaultextension='.png')
                 myScreenshot.save(file_path)
+                #sg.ChangeLookAndFeel('DarkTeal6')
+                confirm_layout = [[sg.Text("The roadmap has been saved as image on\n" + file_path + "!",font=("Bahnschrift"))]]
+                confirm_window = sg.Window(title="Confirmation",layout=confirm_layout,auto_close=True,auto_close_duration=5,no_titlebar=True)
+                ev2, val2 = confirm_window.read()
+                confirm_window.close()
             except:
                 continue
+        if ev == "minus":
+            letter = letter - 1
+            functionRoadmap(stapjes=stapjes,rm_window=rm_window)
+            break
+        if ev == "plus":
+            letter = letter + 1
+            functionRoadmap(stapjes=stapjes,rm_window=rm_window)
+            break
+        if ev == "quit":
+            for k in questionnaire_aan:
+                if questionnaire_aan[k] == 1:
+                    questionnaire_window[k].close()
+            window_5.close()
+            break
     rm_window.close()
+
+
 
 roadmap_stapjes = {'-Guidance-':stapjes_g,
 '-Training-':stapjes_t,
@@ -542,6 +503,8 @@ roadmap_stapjes = {'-Guidance-':stapjes_g,
 }
 
 roadmap_window = {'-Guidance-':0,'-Training-':0,'-Partspicking-':0}
+
+
 
 #roadmap_EvVal = 
 
@@ -555,8 +518,14 @@ while True:
             if questionnaire_EvVal[i,0] == 'Hide':
                 questionnaire_window[i].hide()
             if questionnaire_EvVal[i,0] in roadmap_window:
+                sg.ChangeLookAndFeel('LightGrey')
                 c = Link(d0 = questionnaire_EvVal[i,1],stapjes=roadmap_stapjes[questionnaire_EvVal[i,0]])
                 functionRoadmap(stapjes=c,rm_window=roadmap_window[questionnaire_EvVal[i,0]])
+            if questionnaire_EvVal[i,0] == 'quit':
+                for k in questionnaire_aan:
+                    if questionnaire_aan[k] == 1:
+                        questionnaire_window[k].close()
+                window_5.close()                
     if event in ARhelp:
         layout_info = [[sg.Text(ARhelp[event])]]
         titel = 'What Augmented Reality can help to do'
@@ -564,9 +533,10 @@ while True:
         event, values = window_info.read()
         window_info.close()
     if event in questionnaire:
+        sg.ChangeLookAndFeel('DarkTeal6')
         if questionnaire_aan[event] == 0:
             titel = questionnaire_titel[event]
-            questionnaire_window[event] = sg.Window(titel,questionnaire[event],size=(500,500),grab_anywhere=True,no_titlebar=True)
+            questionnaire_window[event] = sg.Window(titel,questionnaire[event],size=(1500,700),force_toplevel=True,grab_anywhere=False,no_titlebar=True,auto_size_buttons=True)
             questionnaire_aan[event] = 1
         else:
             questionnaire_window[event].UnHide()
